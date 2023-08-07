@@ -1,8 +1,27 @@
 use crate::prelude::*;
 
+pub enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
+impl Direction {
+    fn get_key_code(&self) -> VirtualKeyCode {
+        match *self {
+            Direction::Up => VirtualKeyCode::Up,
+            Direction::Down => VirtualKeyCode::Down,
+            Direction::Left => VirtualKeyCode::Left,
+            Direction::Right => VirtualKeyCode::Right,
+        }
+    }
+}
+
 pub struct Player {
     x_position: i32,
     y_position: i32,
+    facing: Direction,
 }
 
 impl Player {
@@ -10,6 +29,7 @@ impl Player {
         Player {
             x_position,
             y_position,
+            facing: Direction::Down,
         }
     }
 
@@ -21,5 +41,18 @@ impl Player {
             BLACK,
             to_cp437('@'),
         )
+    }
+
+    pub fn change_facing(&mut self, new_direction: Direction) {
+        self.facing = new_direction;
+    }
+
+    pub fn move_forward(&mut self) {
+        match self.facing {
+            Direction::Up => self.y_position += 1,
+            Direction::Down => self.y_position -= 1,
+            Direction::Left => self.x_position -= 1,
+            Direction::Right => self.x_position += 1,
+        }
     }
 }
