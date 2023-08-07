@@ -1,5 +1,23 @@
 use bracket_lib::prelude::*;
 
+struct Player {
+    x_position: i32,
+    y_position: i32,
+}
+
+impl Player {
+    fn new(x_position: i32, y_position: i32) -> Self {
+        Player {
+            x_position,
+            y_position,
+        }
+    }
+
+    fn render(&mut self, ctx: &mut BTerm) {
+        ctx.set(self.x_position, self.y_position, GREEN, BLACK, to_cp437('@'))
+    }
+}
+
 enum GameMode {
     Menu,
     Playing,
@@ -9,13 +27,14 @@ enum GameMode {
 struct State {
     mode: GameMode,
     score: i32,
+    player: Player,
 }
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
         match self.mode {
             GameMode::GameOver => self.game_over(ctx),
-            GameMode::Playing => self.game_over(ctx),
+            GameMode::Playing => self.play(ctx),
             GameMode::Menu => self.main_menu(ctx),
         }
     }
@@ -26,6 +45,7 @@ impl State {
         State {
             mode: GameMode::Menu,
             score: 0,
+            player: Player::new(10, 10),
         }
     }
 
@@ -40,7 +60,7 @@ impl State {
     }
 
     fn restart(&mut self) {
-        self.mode = GameMode::Menu;
+        self.mode = GameMode::Playing;
     }
 
     fn main_menu(&mut self, ctx: &mut BTerm) {
@@ -60,6 +80,12 @@ impl State {
         ctx.print_centered(9, "(Q) Quit Game");
 
         self.watch_for_start_or_quit(ctx);
+    }
+
+    fn play(&mut self, ctx: &mut BTerm) {
+        ctx.cls_bg(BLACK);
+
+        self.player.render(ctx);
     }
 }
 
