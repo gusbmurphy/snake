@@ -1,5 +1,7 @@
 use crate::prelude::*;
 
+const FRAME_DURATION: f32 = 75.0;
+
 enum GameMode {
     Menu,
     Playing,
@@ -9,6 +11,7 @@ enum GameMode {
 pub struct State {
     mode: GameMode,
     score: i32,
+    frame_time: f32,
     player: Player,
 }
 
@@ -27,6 +30,7 @@ impl State {
         State {
             mode: GameMode::Menu,
             score: 0,
+            frame_time: 0.0,
             player: Player::new(10, 10),
         }
     }
@@ -69,6 +73,12 @@ impl State {
 
         if let Some(direction) = Direction::from_key_code(ctx.key) {
             self.player.change_facing(direction);
+        }
+
+        self.frame_time += ctx.frame_time_ms;
+        if self.frame_time > FRAME_DURATION {
+            self.frame_time = 0.0;
+            self.player.move_forward();
         }
 
         self.player.render(ctx);
