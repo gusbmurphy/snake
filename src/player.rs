@@ -50,8 +50,8 @@ impl Player {
 
     pub fn move_forward(&mut self) {
         match self.facing {
-            Direction::Up => self.y_position += 1,
-            Direction::Down => self.y_position -= 1,
+            Direction::Up => self.y_position -= 1,
+            Direction::Down => self.y_position += 1,
             Direction::Left => self.x_position -= 1,
             Direction::Right => self.x_position += 1,
         }
