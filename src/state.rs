@@ -67,6 +67,10 @@ impl State {
     fn play(&mut self, ctx: &mut BTerm) {
         ctx.cls_bg(BLACK);
 
+        if let Some(direction) = Direction::from_key_code(ctx.key) {
+            self.player.change_facing(direction);
+        }
+
         self.player.render(ctx);
     }
 }

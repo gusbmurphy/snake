@@ -16,6 +16,16 @@ impl Direction {
             Direction::Right => VirtualKeyCode::Right,
         }
     }
+
+    pub fn from_key_code(key_code: Option<VirtualKeyCode>) -> Option<Direction> {
+        match key_code {
+            Some(VirtualKeyCode::Up) => Some(Direction::Up),
+            Some(VirtualKeyCode::Down) => Some(Direction::Down),
+            Some(VirtualKeyCode::Left) => Some(Direction::Left),
+            Some(VirtualKeyCode::Right) => Some(Direction::Right),
+            _ => None,
+        }
+    }
 }
 
 pub struct Player {
