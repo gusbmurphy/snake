@@ -8,15 +8,6 @@ pub enum Direction {
 }
 
 impl Direction {
-    fn get_key_code(&self) -> VirtualKeyCode {
-        match *self {
-            Direction::Up => VirtualKeyCode::Up,
-            Direction::Down => VirtualKeyCode::Down,
-            Direction::Left => VirtualKeyCode::Left,
-            Direction::Right => VirtualKeyCode::Right,
-        }
-    }
-
     pub fn from_key_code(key_code: Option<VirtualKeyCode>) -> Option<Direction> {
         match key_code {
             Some(VirtualKeyCode::Up) => Some(Direction::Up),
