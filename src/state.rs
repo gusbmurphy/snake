@@ -111,6 +111,14 @@ impl State {
         self.watch_for_start_or_quit(ctx);
     }
 
+    fn generate_random_apple(&mut self) {
+        let mut random = RandomNumberGenerator::new();
+        let x_position = random.range(1, SCREEN_WIDTH);
+        let y_position = random.range(1, SCREEN_HEIGHT);
+
+        self.apple = Apple::new(x_position, y_position);
+    }
+
     fn play(&mut self, ctx: &mut BTerm) {
         ctx.cls_bg(BLACK);
 
@@ -122,6 +130,11 @@ impl State {
         if self.frame_time > FRAME_DURATION {
             self.frame_time = 0.0;
             self.player.move_forward();
+        }
+
+        if self.player.is_at_same_position_as(&self.apple) {
+            self.score += 1;
+            self.generate_random_apple();
         }
 
         self.apple.render(ctx);
