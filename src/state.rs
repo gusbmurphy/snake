@@ -137,6 +137,8 @@ impl State {
             self.generate_random_apple();
         }
 
+        ctx.print(0, 0, &format!("Score: {}", self.score));
+
         self.apple.render(ctx);
         self.player.render(ctx);
     }
