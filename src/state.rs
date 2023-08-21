@@ -10,6 +10,17 @@ enum GameMode {
     GameOver,
 }
 
+pub trait PositionInSpace {
+    fn get_x_position(&self) -> i32;
+
+    fn get_y_position(&self) -> i32;
+
+    fn is_at_same_position_as(&self, other: &impl PositionInSpace) -> bool {
+        self.get_x_position() == other.get_x_position()
+            && self.get_y_position() == other.get_y_position()
+    }
+}
+
 struct Apple {
     x_position: i32,
     y_position: i32,
@@ -25,6 +36,16 @@ impl Apple {
 
     fn render(&mut self, ctx: &mut BTerm) {
         ctx.set(self.x_position, self.y_position, RED, BLACK, to_cp437('▲'))
+    }
+}
+
+impl PositionInSpace for Apple {
+    fn get_x_position(&self) -> i32 {
+        self.x_position
+    }
+
+    fn get_y_position(&self) -> i32 {
+        self.y_position
     }
 }
 

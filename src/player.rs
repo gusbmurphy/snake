@@ -57,3 +57,13 @@ impl Player {
         }
     }
 }
+
+impl PositionInSpace for Player {
+    fn get_x_position(&self) -> i32 {
+        self.x_position
+    }
+
+    fn get_y_position(&self) -> i32 {
+        self.y_position
+    }
+}
