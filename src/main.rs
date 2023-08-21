@@ -1,10 +1,10 @@
 mod apple;
-mod player;
+mod snake;
 mod state;
 
 mod prelude {
     pub use crate::apple::*;
-    pub use crate::player::*;
+    pub use crate::snake::*;
     pub use crate::state::*;
     pub use bracket_lib::prelude::*;
 }

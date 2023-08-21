@@ -25,7 +25,7 @@ pub struct State {
     mode: GameMode,
     score: i32,
     frame_time: f32,
-    player: Player,
+    player: Snake,
     apple: Apple,
 }
 
@@ -45,7 +45,7 @@ impl State {
             mode: GameMode::Menu,
             score: 0,
             frame_time: 0.0,
-            player: Player::new(10, 10),
+            player: Snake::new(10, 10),
             apple: Apple::new(20, 20),
         }
     }

@@ -19,15 +19,15 @@ impl Direction {
     }
 }
 
-pub struct Player {
+pub struct Snake {
     x_position: i32,
     y_position: i32,
     facing: Direction,
 }
 
-impl Player {
+impl Snake {
     pub fn new(x_position: i32, y_position: i32) -> Self {
-        Player {
+        Snake {
             x_position,
             y_position,
             facing: Direction::Down,
@@ -58,7 +58,7 @@ impl Player {
     }
 }
 
-impl PositionInSpace for Player {
+impl PositionInSpace for Snake {
     fn get_x_position(&self) -> i32 {
         self.x_position
     }
