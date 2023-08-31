@@ -19,6 +19,23 @@ impl Direction {
     }
 }
 
+#[derive(Clone, Copy)]
+pub struct Turn {
+    x_position: i32,
+    y_position: i32,
+    pub direction: Direction,
+}
+
+impl Turn {
+    pub fn new(x_position: i32, y_position: i32, direction: Direction) -> Self {
+        Turn {
+            x_position,
+            y_position,
+            direction,
+        }
+    }
+}
+
 pub struct Snake {
     x_position: i32,
     y_position: i32,
