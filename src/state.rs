@@ -116,4 +116,34 @@ impl State {
         self.apple.render(ctx);
         self.player.render(ctx);
     }
+
+    fn handle_input(&mut self, pressed_key: Option<VirtualKeyCode>) {
+        if let Some(direction) = Direction::from_key_code(pressed_key) {
+            let player_x = self.player.get_x_position();
+            let player_y = self.player.get_y_position();
+
+            let new_turn = Turn::new(player_x, player_y, direction);
+
+            self.turns[player_x as usize][player_y as usize] = Some(new_turn);
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn arrow_key_places_turn_at_snake_head() {
+        let snake = Snake::new(5, 7);
+        let mut state = State::new();
+        state.player = snake;
+
+        state.handle_input(Some(VirtualKeyCode::Up));
+
+        let expected_turn = state.turns[5][7];
+
+        assert!(expected_turn.is_some());
+        assert!(expected_turn.unwrap().direction == Direction::Up);
+    }
 }
