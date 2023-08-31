@@ -27,6 +27,7 @@ pub struct State {
     frame_time: f32,
     player: Snake,
     apple: Apple,
+    turns: [[Option<Turn>; SCREEN_HEIGHT as usize]; SCREEN_WIDTH as usize],
 }
 
 impl GameState for State {
@@ -47,6 +48,7 @@ impl State {
             frame_time: 0.0,
             player: Snake::new(10, 10),
             apple: Apple::new(20, 20),
+            turns: [[None; SCREEN_HEIGHT as usize]; SCREEN_WIDTH as usize],
         }
     }
 
