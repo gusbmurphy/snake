@@ -1,5 +1,6 @@
 use crate::prelude::*;
 
+#[derive(Clone, Copy, PartialEq)]
 pub enum Direction {
     Up,
     Down,
