@@ -10,12 +10,12 @@ enum GamePhase {
     GameOver,
 }
 
-pub trait PositionInSpace {
+pub trait Position {
     fn get_x_position(&self) -> i32;
 
     fn get_y_position(&self) -> i32;
 
-    fn is_at_same_position_as(&self, other: &impl PositionInSpace) -> bool {
+    fn is_at_same_position_as(&self, other: &impl Position) -> bool {
         self.get_x_position() == other.get_x_position()
             && self.get_y_position() == other.get_y_position()
     }
