@@ -1,14 +1,14 @@
 mod apple;
-mod snake;
 mod board;
-mod screen_representation;
 mod controller;
+mod screen_representation;
+mod snake;
 
 mod prelude {
-    pub use crate::screen_representation::*;
     pub use crate::apple::*;
-    pub use crate::snake::*;
     pub use crate::board::*;
+    pub use crate::screen_representation::*;
+    pub use crate::snake::*;
     pub use bracket_lib::prelude::*;
 }
 
