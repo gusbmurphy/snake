@@ -27,3 +27,13 @@ impl Position for Apple {
         self.y_position
     }
 }
+
+impl ScreenRepresentation for Apple {
+    fn get_glyph(&self) -> FontCharType {
+        return to_cp437('▲');
+    }
+
+    fn get_color(&self) -> (u8, u8, u8) {
+        return RED;
+    }
+}
