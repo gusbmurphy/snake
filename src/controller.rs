@@ -71,14 +71,14 @@ impl Controller {
         self.watch_for_start_or_quit(ctx);
     }
 
-    fn restart(&mut self) {
+    fn start(&mut self) {
         self.phase = GamePhase::Playing;
     }
 
     fn watch_for_start_or_quit(&mut self, ctx: &mut BTerm) {
         if let Some(key) = ctx.key {
             match key {
-                VirtualKeyCode::P => self.restart(),
+                VirtualKeyCode::P => self.start(),
                 VirtualKeyCode::Q => ctx.quitting = true,
                 _ => {}
             }
