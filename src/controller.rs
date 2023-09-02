@@ -8,7 +8,6 @@ pub const SCREEN_HEIGHT: i32 = 50;
 enum GamePhase {
     Menu,
     Playing,
-    GameOver,
 }
 
 pub struct Controller {
@@ -30,7 +29,6 @@ impl Controller {
 impl GameState for Controller {
     fn tick(&mut self, ctx: &mut BTerm) {
         match self.phase {
-            GamePhase::GameOver => self.game_over(ctx),
             GamePhase::Playing => self.play(ctx),
             GamePhase::Menu => self.main_menu(ctx),
         }
@@ -68,16 +66,6 @@ impl Controller {
         ctx.cls();
         ctx.print_centered(5, "Welcome to Snake");
         ctx.print_centered(8, "(P) Play Game");
-        ctx.print_centered(9, "(Q) Quit Game");
-
-        self.watch_for_start_or_quit(ctx);
-    }
-
-    fn game_over(&mut self, ctx: &mut BTerm) {
-        ctx.cls();
-        ctx.print_centered(5, "You are dead!");
-        ctx.print_centered(6, &format!("You earned {} points", self.board.get_score()));
-        ctx.print_centered(8, "(P) Play Again");
         ctx.print_centered(9, "(Q) Quit Game");
 
         self.watch_for_start_or_quit(ctx);
