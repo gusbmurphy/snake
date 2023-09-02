@@ -87,4 +87,19 @@ mod tests {
         assert_eq!(representations.get(0).unwrap().get_x_position(), 2);
         assert_eq!(representations.get(1).unwrap().get_x_position(), 7);
     }
+
+    #[test]
+    fn score_is_incremented_if_player_is_on_apple_at_tick() {
+        let test_apple = Apple::new(3, 3);
+        let test_snake = Snake::new(3, 3);
+
+        let mut board = Board::new();
+        board.apple = test_apple;
+        board.player = test_snake;
+        board.score = 5;
+
+        board.tick(Direction::Down);
+
+        assert_eq!(board.score, 6);
+    }
 }
