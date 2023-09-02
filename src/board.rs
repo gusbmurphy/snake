@@ -33,6 +33,9 @@ impl Board {
     pub fn get_representable_objects(&mut self) -> Vec<ScreenRepresentation> {
         let mut representable_objects: Vec<ScreenRepresentation> = Vec::new();
 
+        representable_objects.push(self.player.get_screen_representation());
+        representable_objects.push(self.apple.get_screen_representation());
+
         return representable_objects;
     }
 
