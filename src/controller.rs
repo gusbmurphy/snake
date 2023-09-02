@@ -13,6 +13,7 @@ enum GamePhase {
 pub struct Controller {
     board: Board,
     phase: GamePhase,
+    intended_player_direction: Direction,
     frame_time: f32,
 }
 
@@ -22,6 +23,7 @@ impl Controller {
             board,
             phase: GamePhase::Menu,
             frame_time: 0.0,
+            intended_player_direction: Direction::Up,
         }
     }
 }
@@ -39,10 +41,14 @@ impl Controller {
     fn play(&mut self, ctx: &mut BTerm) {
         ctx.cls_bg(BLACK);
 
+        if let Some(direction) = Direction::from_key_code(ctx.key) {
+            self.intended_player_direction = direction;
+        }
+
         self.frame_time += ctx.frame_time_ms;
         if self.frame_time > FRAME_DURATION {
             self.frame_time = 0.0;
-            self.board.tick(ctx.key);
+            self.board.tick(self.intended_player_direction);
         }
 
         ctx.print(0, 0, &format!("Score: {}", self.board.get_score()));
