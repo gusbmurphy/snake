@@ -1,88 +1,54 @@
+use crate::controller::SCREEN_HEIGHT;
+use crate::controller::SCREEN_WIDTH;
 use crate::prelude::*;
-
-const FRAME_DURATION: f32 = 75.0;
-const SCREEN_WIDTH: i32 = 80;
-const SCREEN_HEIGHT: i32 = 50;
-
-enum GamePhase {
-    Menu,
-    Playing,
-    GameOver,
-}
 
 pub trait Position {
     fn get_x_position(&self) -> i32;
-
     fn get_y_position(&self) -> i32;
-
-    fn is_at_same_position_as(&self, other: &impl Position) -> bool {
-        self.get_x_position() == other.get_x_position()
-            && self.get_y_position() == other.get_y_position()
-    }
 }
 
+pub trait ComparePosition: Position {}
+
 pub struct Board {
-    phase: GamePhase,
     score: i32,
-    frame_time: f32,
     player: Snake,
     apple: Apple,
     turns: [[Option<Turn>; SCREEN_HEIGHT as usize]; SCREEN_WIDTH as usize],
 }
 
-impl GameState for Board {
-    fn tick(&mut self, ctx: &mut BTerm) {
-        match self.phase {
-            GamePhase::GameOver => self.game_over(ctx),
-            GamePhase::Playing => self.play(ctx),
-            GamePhase::Menu => self.main_menu(ctx),
-        }
-    }
-}
-
 impl Board {
     pub fn new() -> Self {
         Board {
-            phase: GamePhase::Menu,
             score: 0,
-            frame_time: 0.0,
             player: Snake::new(10, 10),
             apple: Apple::new(20, 20),
             turns: [[None; SCREEN_HEIGHT as usize]; SCREEN_WIDTH as usize],
         }
     }
 
-    fn watch_for_start_or_quit(&mut self, ctx: &mut BTerm) {
-        if let Some(key) = ctx.key {
-            match key {
-                VirtualKeyCode::P => self.restart(),
-                VirtualKeyCode::Q => ctx.quitting = true,
-                _ => {}
-            }
+    pub fn get_score(&mut self) -> i32 {
+        return self.score;
+    }
+
+    pub fn get_representable_objects(&mut self) -> Vec<ScreenRepresentation> {
+        let mut representable_objects: Vec<ScreenRepresentation> = Vec::new();
+
+        return representable_objects;
+    }
+
+    pub fn tick(&mut self, pressed_key: Option<VirtualKeyCode>) {
+        self.player.move_forward();
+
+        self.handle_input(pressed_key);
+
+        if Self::are_at_same_position(&self.player, &self.apple) {
+            self.score += 1;
+            self.generate_random_apple();
         }
     }
 
-    fn restart(&mut self) {
-        self.phase = GamePhase::Playing;
-    }
-
-    fn main_menu(&mut self, ctx: &mut BTerm) {
-        ctx.cls();
-        ctx.print_centered(5, "Welcome to Snake");
-        ctx.print_centered(8, "(P) Play Game");
-        ctx.print_centered(9, "(Q) Quit Game");
-
-        self.watch_for_start_or_quit(ctx);
-    }
-
-    fn game_over(&mut self, ctx: &mut BTerm) {
-        ctx.cls();
-        ctx.print_centered(5, "You are dead!");
-        ctx.print_centered(6, &format!("You earned {} points", self.score));
-        ctx.print_centered(8, "(P) Play Again");
-        ctx.print_centered(9, "(Q) Quit Game");
-
-        self.watch_for_start_or_quit(ctx);
+    fn are_at_same_position(a: &impl Position, b: &impl Position) -> bool {
+        a.get_x_position() == b.get_x_position() && a.get_y_position() == b.get_y_position()
     }
 
     fn generate_random_apple(&mut self) {
@@ -93,32 +59,10 @@ impl Board {
         self.apple = Apple::new(x_position, y_position);
     }
 
-    fn play(&mut self, ctx: &mut BTerm) {
-        ctx.cls_bg(BLACK);
-
-        if let Some(direction) = Direction::from_key_code(ctx.key) {
-            self.player.change_facing(direction);
-        }
-
-        self.frame_time += ctx.frame_time_ms;
-        if self.frame_time > FRAME_DURATION {
-            self.frame_time = 0.0;
-            self.player.move_forward();
-        }
-
-        if self.player.is_at_same_position_as(&self.apple) {
-            self.score += 1;
-            self.generate_random_apple();
-        }
-
-        ctx.print(0, 0, &format!("Score: {}", self.score));
-
-        self.apple.render(ctx);
-        self.player.render(ctx);
-    }
-
     fn handle_input(&mut self, pressed_key: Option<VirtualKeyCode>) {
         if let Some(direction) = Direction::from_key_code(pressed_key) {
+            self.player.change_facing(direction);
+
             let player_x = self.player.get_x_position();
             let player_y = self.player.get_y_position();
 
