@@ -1,9 +1,11 @@
 mod apple;
 mod snake;
 mod state;
+mod screen_representation;
 mod controller;
 
 mod prelude {
+    pub use crate::screen_representation::*;
     pub use crate::apple::*;
     pub use crate::snake::*;
     pub use crate::state::*;
