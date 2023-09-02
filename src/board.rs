@@ -73,4 +73,18 @@ mod tests {
         board.score = 32;
         assert_eq!(board.get_score(), 32);
     }
+
+    #[test]
+    fn get_screen_representations_returns_correct_order() {
+        let test_apple = Apple::new(2, 3);
+        let test_snake = Snake::new(7, 10);
+
+        let mut board = Board::new();
+        board.apple = test_apple;
+        board.player = test_snake;
+
+        let representations = board.get_screen_representations();
+        assert_eq!(representations.get(0).unwrap().get_x_position(), 2);
+        assert_eq!(representations.get(1).unwrap().get_x_position(), 7);
+    }
 }
