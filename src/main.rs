@@ -1,6 +1,7 @@
 mod apple;
 mod snake;
 mod state;
+mod controller;
 
 mod prelude {
     pub use crate::apple::*;
@@ -9,10 +10,13 @@ mod prelude {
     pub use bracket_lib::prelude::*;
 }
 
+use controller::Controller;
 use prelude::*;
 
 fn main() -> BError {
     let context = BTermBuilder::simple80x50().with_title("Snake").build()?;
 
-    main_loop(context, State::new())
+    let state = State::new();
+
+    main_loop(context, Controller::new(state))
 }
