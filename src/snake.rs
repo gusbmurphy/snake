@@ -85,3 +85,13 @@ impl Position for Snake {
         self.y_position
     }
 }
+
+impl ScreenRepresentation for Snake {
+    fn get_glyph(&self) -> FontCharType {
+        return to_cp437('@');
+    }
+
+    fn get_color(&self) -> (u8, u8, u8) {
+        return GREEN;
+    }
+}
