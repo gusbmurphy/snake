@@ -52,16 +52,6 @@ impl Snake {
         }
     }
 
-    pub fn render(&mut self, ctx: &mut BTerm) {
-        ctx.set(
-            self.x_position,
-            self.y_position,
-            GREEN,
-            BLACK,
-            to_cp437('@'),
-        )
-    }
-
     pub fn change_facing(&mut self, new_direction: Direction) {
         self.facing = new_direction;
     }
