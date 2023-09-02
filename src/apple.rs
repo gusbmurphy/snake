@@ -28,12 +28,8 @@ impl Position for Apple {
     }
 }
 
-impl ScreenRepresentation for Apple {
-    fn get_glyph(&self) -> FontCharType {
-        return to_cp437('▲');
-    }
-
-    fn get_color(&self) -> (u8, u8, u8) {
-        return RED;
+impl ScreenRepresentable for Apple {
+    fn get_screen_representation(&self) -> ScreenRepresentation {
+        return ScreenRepresentation::new(to_cp437('▲'), RED, self);
     }
 }

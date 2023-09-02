@@ -86,12 +86,8 @@ impl Position for Snake {
     }
 }
 
-impl ScreenRepresentation for Snake {
-    fn get_glyph(&self) -> FontCharType {
-        return to_cp437('@');
-    }
-
-    fn get_color(&self) -> (u8, u8, u8) {
-        return GREEN;
+impl ScreenRepresentable for Snake {
+    fn get_screen_representation(&self) -> ScreenRepresentation {
+        return ScreenRepresentation::new(to_cp437('@'), GREEN, self);
     }
 }
