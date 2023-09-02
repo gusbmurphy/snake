@@ -21,7 +21,7 @@ pub trait PositionInSpace {
     }
 }
 
-pub struct State {
+pub struct Board {
     mode: GameMode,
     score: i32,
     frame_time: f32,
@@ -30,7 +30,7 @@ pub struct State {
     turns: [[Option<Turn>; SCREEN_HEIGHT as usize]; SCREEN_WIDTH as usize],
 }
 
-impl GameState for State {
+impl GameState for Board {
     fn tick(&mut self, ctx: &mut BTerm) {
         match self.mode {
             GameMode::GameOver => self.game_over(ctx),
@@ -40,9 +40,9 @@ impl GameState for State {
     }
 }
 
-impl State {
+impl Board {
     pub fn new() -> Self {
-        State {
+        Board {
             mode: GameMode::Menu,
             score: 0,
             frame_time: 0.0,
@@ -136,7 +136,7 @@ mod tests {
     #[test]
     fn arrow_key_places_turn_at_snake_head() {
         let snake = Snake::new(5, 7);
-        let mut state = State::new();
+        let mut state = Board::new();
         state.player = snake;
 
         state.handle_input(Some(VirtualKeyCode::Up));

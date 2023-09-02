@@ -1,11 +1,11 @@
 use crate::prelude::*;
 
 pub struct Controller {
-    state: State,
+    state: Board,
 }
 
 impl Controller {
-    pub fn new(state: State) -> Self {
+    pub fn new(state: Board) -> Self {
         Controller {
             state,
         }
