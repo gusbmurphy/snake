@@ -18,7 +18,7 @@ impl Apple {
     }
 }
 
-impl PositionInSpace for Apple {
+impl Position for Apple {
     fn get_x_position(&self) -> i32 {
         self.x_position
     }

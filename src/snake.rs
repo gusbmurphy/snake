@@ -76,7 +76,7 @@ impl Snake {
     }
 }
 
-impl PositionInSpace for Snake {
+impl Position for Snake {
     fn get_x_position(&self) -> i32 {
         self.x_position
     }
