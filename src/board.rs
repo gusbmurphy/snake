@@ -4,7 +4,7 @@ const FRAME_DURATION: f32 = 75.0;
 const SCREEN_WIDTH: i32 = 80;
 const SCREEN_HEIGHT: i32 = 50;
 
-enum GameMode {
+enum GamePhase {
     Menu,
     Playing,
     GameOver,
@@ -22,7 +22,7 @@ pub trait PositionInSpace {
 }
 
 pub struct Board {
-    mode: GameMode,
+    phase: GamePhase,
     score: i32,
     frame_time: f32,
     player: Snake,
@@ -32,10 +32,10 @@ pub struct Board {
 
 impl GameState for Board {
     fn tick(&mut self, ctx: &mut BTerm) {
-        match self.mode {
-            GameMode::GameOver => self.game_over(ctx),
-            GameMode::Playing => self.play(ctx),
-            GameMode::Menu => self.main_menu(ctx),
+        match self.phase {
+            GamePhase::GameOver => self.game_over(ctx),
+            GamePhase::Playing => self.play(ctx),
+            GamePhase::Menu => self.main_menu(ctx),
         }
     }
 }
@@ -43,7 +43,7 @@ impl GameState for Board {
 impl Board {
     pub fn new() -> Self {
         Board {
-            mode: GameMode::Menu,
+            phase: GamePhase::Menu,
             score: 0,
             frame_time: 0.0,
             player: Snake::new(10, 10),
@@ -63,7 +63,7 @@ impl Board {
     }
 
     fn restart(&mut self) {
-        self.mode = GameMode::Playing;
+        self.phase = GamePhase::Playing;
     }
 
     fn main_menu(&mut self, ctx: &mut BTerm) {
