@@ -62,3 +62,15 @@ impl Board {
         self.apple = Apple::new(x_position, y_position);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn get_score_returns_current_score() {
+        let mut board = Board::new();
+        board.score = 32;
+        assert_eq!(board.get_score(), 32);
+    }
+}
