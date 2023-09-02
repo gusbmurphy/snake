@@ -30,7 +30,7 @@ impl Board {
         return self.score;
     }
 
-    pub fn get_representable_objects(&mut self) -> Vec<ScreenRepresentation> {
+    pub fn get_screen_representations(&mut self) -> Vec<ScreenRepresentation> {
         let mut representable_objects: Vec<ScreenRepresentation> = Vec::new();
 
         representable_objects.push(self.player.get_screen_representation());

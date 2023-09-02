@@ -49,7 +49,7 @@ impl Controller {
 
         ctx.print(0, 0, &format!("Score: {}", self.board.get_score()));
 
-        for representable in self.board.get_representable_objects() {
+        for representable in self.board.get_screen_representations() {
             self.render_screen_representation(representable, ctx)
         }
     }
