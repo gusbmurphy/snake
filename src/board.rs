@@ -39,9 +39,11 @@ impl Board {
         return representable_objects;
     }
 
-    pub fn tick(&mut self, player_direction: Direction) {
-        self.snake.change_facing(player_direction);
-        self.add_turn_at_player_position_with_player_facing();
+    pub fn tick(&mut self, new_direction: Direction) {
+        if new_direction != self.snake.get_facing() {
+            self.snake.change_facing(new_direction);
+            self.add_turn_at_player_position_with_player_facing();
+        }
 
         if Self::are_at_same_position(&self.snake, &self.apple) {
             self.score += 1;
@@ -132,8 +134,28 @@ mod tests {
         let mut board = Board::new();
         board.snake = snake;
 
-        board.tick(Direction::Down);
+        board.tick(Direction::Left);
 
-        assert_eq!(board.turns[3][3].unwrap().direction, Direction::Down);
+        assert_eq!(board.turns[3][3].unwrap().direction, Direction::Left);
+    }
+
+    #[test]
+    fn turn_is_not_added_if_direction_given_at_tick_is_same_as_snake_facing() {
+        let mut snake = Snake::new(3, 3);
+        snake.change_facing(Direction::Up);
+
+        let mut board = Board::new();
+        board.snake = snake;
+
+        board.tick(Direction::Up);
+
+        assert!(!board_has_any_turns(board))
+    }
+
+    fn board_has_any_turns(board: Board) -> bool {
+        board
+            .turns
+            .iter()
+            .any(|&column| column.iter().any(|&position| position.is_some()))
     }
 }
