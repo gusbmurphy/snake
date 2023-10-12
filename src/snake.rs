@@ -81,3 +81,15 @@ impl ScreenRepresentable for Snake {
         return ScreenRepresentation::new(to_cp437('@'), GREEN, self);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn change_facing_sets_facing() {
+        let mut snake = Snake::new(2, 3);
+        snake.change_facing(Direction::Left);
+        assert_eq!(snake.facing, Direction::Left);
+    }
+}
