@@ -41,6 +41,7 @@ impl Board {
 
     pub fn tick(&mut self, player_direction: Direction) {
         self.player.change_facing(player_direction);
+        self.add_turn_at_player_position_with_player_facing();
 
         if Self::are_at_same_position(&self.player, &self.apple) {
             self.score += 1;
@@ -60,6 +61,13 @@ impl Board {
         let y_position = random.range(1, SCREEN_HEIGHT);
 
         self.apple = Apple::new(x_position, y_position);
+    }
+
+    fn add_turn_at_player_position_with_player_facing(&mut self) {
+        let x_position = self.player.get_x_position();
+        let y_position = self.player.get_y_position();
+
+        self.turns[x_position as usize][y_position as usize] = Some(Turn::new(x_position, y_position, self.player.get_facing()));
     }
 }
 
@@ -101,5 +109,17 @@ mod tests {
         board.tick(Direction::Down);
 
         assert_eq!(board.score, 6);
+    }
+
+    #[test]
+    fn turn_is_added_when_player_turns() {
+        let snake = Snake::new(3, 3);
+
+        let mut board = Board::new();
+        board.player = snake;
+
+        board.tick(Direction::Down);
+
+        assert_eq!(board.turns[3][3].unwrap().direction, Direction::Down);
     }
 }
