@@ -56,6 +56,10 @@ impl Snake {
         self.facing = new_direction;
     }
 
+    pub fn get_facing(&mut self) -> Direction {
+        return self.facing;
+    }
+
     pub fn move_forward(&mut self) {
         match self.facing {
             Direction::Up => self.y_position -= 1,
@@ -91,5 +95,12 @@ mod tests {
         let mut snake = Snake::new(2, 3);
         snake.change_facing(Direction::Left);
         assert_eq!(snake.facing, Direction::Left);
+    }
+
+    #[test]
+    fn get_facing_returns_facing() {
+        let mut snake = Snake::new(2, 3);
+        snake.facing = Direction::Left;
+        assert_eq!(snake.get_facing(), Direction::Left);
     }
 }
