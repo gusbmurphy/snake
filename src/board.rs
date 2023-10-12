@@ -112,6 +112,19 @@ mod tests {
     }
 
     #[test]
+    fn snake_is_moved_in_new_direction_after_tick() {
+        let snake = Snake::new(3, 3);
+
+        let mut board = Board::new();
+        board.player = snake;
+
+        board.tick(Direction::Right);
+
+        assert_eq!(board.player.get_x_position(), 4);
+        assert_eq!(board.player.get_y_position(), 3);
+    }
+
+    #[test]
     fn turn_is_added_when_player_turns() {
         let snake = Snake::new(3, 3);
 
