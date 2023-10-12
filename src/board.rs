@@ -45,12 +45,12 @@ impl Board {
             self.add_turn_at_player_position_with_player_facing();
         }
 
+        self.snake.move_forward();
+
         if Self::are_at_same_position(&self.snake, &self.apple) {
             self.score += 1;
             self.generate_random_apple();
         }
-
-        self.snake.move_forward();
     }
 
     fn are_at_same_position(a: &impl Position, b: &impl Position) -> bool {
@@ -100,18 +100,18 @@ mod tests {
     }
 
     #[test]
-    fn score_is_incremented_if_player_is_on_apple_at_tick() {
-        let test_apple = Apple::new(3, 3);
+    fn score_is_incremented_if_player_is_on_apple_after_tick() {
+        let test_apple = Apple::new(3, 4);
         let test_snake = Snake::new(3, 3);
 
         let mut board = Board::new();
         board.apple = test_apple;
         board.snake = test_snake;
-        board.score = 5;
+        board.score = 0;
 
         board.tick(Direction::Down);
 
-        assert_eq!(board.score, 6);
+        assert_eq!(board.score, 1);
     }
 
     #[test]
