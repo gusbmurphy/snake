@@ -67,7 +67,8 @@ impl Board {
         let x_position = self.player.get_x_position();
         let y_position = self.player.get_y_position();
 
-        self.turns[x_position as usize][y_position as usize] = Some(Turn::new(x_position, y_position, self.player.get_facing()));
+        self.turns[x_position as usize][y_position as usize] =
+            Some(Turn::new(x_position, y_position, self.player.get_facing()));
     }
 }
 
