@@ -93,7 +93,11 @@ mod tests {
     #[case(Direction::Down, 1, 2)]
     #[case(Direction::Left, 0, 1)]
     #[case(Direction::Right, 2, 1)]
-    fn move_forward_changes_position(#[case] direction: Direction, #[case] expected_x: i32, #[case] expected_y: i32) {
+    fn move_forward_changes_position(
+        #[case] direction: Direction,
+        #[case] expected_x: i32,
+        #[case] expected_y: i32,
+    ) {
         let mut snake = SnakeNode::new(1, 1);
         snake.facing = direction;
         snake.move_forward();
