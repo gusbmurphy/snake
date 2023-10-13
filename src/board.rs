@@ -53,9 +53,19 @@ impl Board {
         let mut representable_objects: Vec<ScreenRepresentation> = Vec::new();
 
         representable_objects.push(self.apple.get_screen_representation());
+        representable_objects.append(&mut self.get_screen_representations_from_tail());
         representable_objects.push(self.snake_head.get_screen_representation());
 
         return representable_objects;
+    }
+
+    fn get_screen_representations_from_tail(&mut self) -> Vec<ScreenRepresentation> {
+        self.snake_tail
+            .clone()
+            .into_iter()
+            .map(|node| node.get_screen_representation())
+            .clone()
+            .collect::<Vec<ScreenRepresentation>>()
     }
 
     pub fn tick(&mut self, new_direction: Direction) {
@@ -121,14 +131,29 @@ mod tests {
     fn get_screen_representations_returns_correct_order() {
         let test_apple = Apple::new(2, 3);
         let test_snake = SnakeNode::new(7, 10);
+        let test_tail = Vec::from([SnakeNode::new(8, 10)]);
 
         let mut board = Board::new();
         board.apple = test_apple;
         board.snake_head = test_snake;
+        board.snake_tail = test_tail;
 
         let representations = board.get_screen_representations();
-        assert_eq!(representations.get(0).unwrap().get_x_position(), 2);
-        assert_eq!(representations.get(1).unwrap().get_x_position(), 7);
+        assert_eq!(
+            representations.get(0).unwrap().get_x_position(),
+            2,
+            "the apple is first"
+        );
+        assert_eq!(
+            representations.get(1).unwrap().get_x_position(),
+            8,
+            "the tail is second"
+        );
+        assert_eq!(
+            representations.get(2).unwrap().get_x_position(),
+            7,
+            "the head is last"
+        );
     }
 
     #[test]

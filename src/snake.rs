@@ -20,6 +20,7 @@ impl Direction {
     }
 }
 
+#[derive(Clone)]
 pub struct SnakeNode {
     x_position: i32,
     y_position: i32,
