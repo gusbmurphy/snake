@@ -28,6 +28,7 @@ pub struct Board {
     score: i32,
     snake_head: SnakeNode,
     snake_tail: Vec<SnakeNode>,
+    should_add_to_tail: bool,
     apple: Apple,
     turns: [[Option<Turn>; SCREEN_HEIGHT as usize]; SCREEN_WIDTH as usize],
 }
@@ -38,6 +39,7 @@ impl Board {
             score: 0,
             snake_head: SnakeNode::new(10, 10),
             snake_tail: Vec::new(),
+            should_add_to_tail: false,
             apple: Apple::new(20, 20),
             turns: [[None; SCREEN_HEIGHT as usize]; SCREEN_WIDTH as usize],
         }
@@ -62,11 +64,21 @@ impl Board {
             self.add_turn_at_player_position_with_player_facing();
         }
 
+        if self.should_add_to_tail {
+            self.snake_tail.push(SnakeNode::new(
+                self.snake_head.get_x_position(),
+                self.snake_head.get_y_position(),
+            ));
+
+            self.should_add_to_tail = false;
+        }
+
         self.snake_head.move_forward();
 
         if Self::are_at_same_position(&self.snake_head, &self.apple) {
             self.score += 1;
             self.generate_random_apple();
+            self.should_add_to_tail = true;
         }
     }
 
@@ -86,8 +98,11 @@ impl Board {
         let x_position = self.snake_head.get_x_position();
         let y_position = self.snake_head.get_y_position();
 
-        self.turns[x_position as usize][y_position as usize] =
-            Some(Turn::new(x_position, y_position, self.snake_head.get_facing()));
+        self.turns[x_position as usize][y_position as usize] = Some(Turn::new(
+            x_position,
+            y_position,
+            self.snake_head.get_facing(),
+        ));
     }
 }
 
@@ -174,5 +189,31 @@ mod tests {
             .turns
             .iter()
             .any(|&column| column.iter().any(|&position| position.is_some()))
+    }
+
+    #[test]
+    fn after_scoring_tick_node_is_added_where_apple_was() {
+        let test_apple = Apple::new(3, 4);
+        let test_snake = SnakeNode::new(3, 3);
+
+        let mut board = Board::new();
+        board.apple = test_apple;
+        board.snake_head = test_snake;
+        board.score = 0;
+
+        board.tick(Direction::Down);
+        board.tick(Direction::Down);
+
+        let added_node = &board.snake_tail[0];
+        assert_eq!(
+            added_node.get_x_position(),
+            3,
+            "the added node is at the same X position that the apple was"
+        );
+        assert_eq!(
+            added_node.get_y_position(),
+            4,
+            "the added node is at the same Y position that the apple was"
+        );
     }
 }
