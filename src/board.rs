@@ -26,7 +26,8 @@ impl Turn {
 
 pub struct Board {
     score: i32,
-    snake: SnakeNode,
+    snake_head: SnakeNode,
+    snake_tail: Vec<SnakeNode>,
     apple: Apple,
     turns: [[Option<Turn>; SCREEN_HEIGHT as usize]; SCREEN_WIDTH as usize],
 }
@@ -35,7 +36,8 @@ impl Board {
     pub fn new() -> Self {
         Board {
             score: 0,
-            snake: SnakeNode::new(10, 10),
+            snake_head: SnakeNode::new(10, 10),
+            snake_tail: Vec::new(),
             apple: Apple::new(20, 20),
             turns: [[None; SCREEN_HEIGHT as usize]; SCREEN_WIDTH as usize],
         }
@@ -49,20 +51,20 @@ impl Board {
         let mut representable_objects: Vec<ScreenRepresentation> = Vec::new();
 
         representable_objects.push(self.apple.get_screen_representation());
-        representable_objects.push(self.snake.get_screen_representation());
+        representable_objects.push(self.snake_head.get_screen_representation());
 
         return representable_objects;
     }
 
     pub fn tick(&mut self, new_direction: Direction) {
-        if new_direction != self.snake.get_facing() {
-            self.snake.change_facing(new_direction);
+        if new_direction != self.snake_head.get_facing() {
+            self.snake_head.change_facing(new_direction);
             self.add_turn_at_player_position_with_player_facing();
         }
 
-        self.snake.move_forward();
+        self.snake_head.move_forward();
 
-        if Self::are_at_same_position(&self.snake, &self.apple) {
+        if Self::are_at_same_position(&self.snake_head, &self.apple) {
             self.score += 1;
             self.generate_random_apple();
         }
@@ -81,11 +83,11 @@ impl Board {
     }
 
     fn add_turn_at_player_position_with_player_facing(&mut self) {
-        let x_position = self.snake.get_x_position();
-        let y_position = self.snake.get_y_position();
+        let x_position = self.snake_head.get_x_position();
+        let y_position = self.snake_head.get_y_position();
 
         self.turns[x_position as usize][y_position as usize] =
-            Some(Turn::new(x_position, y_position, self.snake.get_facing()));
+            Some(Turn::new(x_position, y_position, self.snake_head.get_facing()));
     }
 }
 
@@ -107,7 +109,7 @@ mod tests {
 
         let mut board = Board::new();
         board.apple = test_apple;
-        board.snake = test_snake;
+        board.snake_head = test_snake;
 
         let representations = board.get_screen_representations();
         assert_eq!(representations.get(0).unwrap().get_x_position(), 2);
@@ -121,7 +123,7 @@ mod tests {
 
         let mut board = Board::new();
         board.apple = test_apple;
-        board.snake = test_snake;
+        board.snake_head = test_snake;
         board.score = 0;
 
         board.tick(Direction::Down);
@@ -134,12 +136,12 @@ mod tests {
         let snake = SnakeNode::new(3, 3);
 
         let mut board = Board::new();
-        board.snake = snake;
+        board.snake_head = snake;
 
         board.tick(Direction::Right);
 
-        assert_eq!(board.snake.get_x_position(), 4);
-        assert_eq!(board.snake.get_y_position(), 3);
+        assert_eq!(board.snake_head.get_x_position(), 4);
+        assert_eq!(board.snake_head.get_y_position(), 3);
     }
 
     #[test]
@@ -147,7 +149,7 @@ mod tests {
         let snake = SnakeNode::new(3, 3);
 
         let mut board = Board::new();
-        board.snake = snake;
+        board.snake_head = snake;
 
         board.tick(Direction::Left);
 
@@ -160,7 +162,7 @@ mod tests {
         snake.change_facing(Direction::Up);
 
         let mut board = Board::new();
-        board.snake = snake;
+        board.snake_head = snake;
 
         board.tick(Direction::Up);
 
