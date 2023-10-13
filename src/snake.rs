@@ -20,15 +20,15 @@ impl Direction {
     }
 }
 
-pub struct Snake {
+pub struct SnakeNode {
     x_position: i32,
     y_position: i32,
     facing: Direction,
 }
 
-impl Snake {
+impl SnakeNode {
     pub fn new(x_position: i32, y_position: i32) -> Self {
-        Snake {
+        SnakeNode {
             x_position,
             y_position,
             facing: Direction::Down,
@@ -53,7 +53,7 @@ impl Snake {
     }
 }
 
-impl Position for Snake {
+impl Position for SnakeNode {
     fn get_x_position(&self) -> i32 {
         self.x_position
     }
@@ -63,7 +63,7 @@ impl Position for Snake {
     }
 }
 
-impl ScreenRepresentable for Snake {
+impl ScreenRepresentable for SnakeNode {
     fn get_screen_representation(&self) -> ScreenRepresentation {
         return ScreenRepresentation::new(to_cp437('@'), GREEN, self);
     }
@@ -76,14 +76,14 @@ mod tests {
 
     #[test]
     fn change_facing_sets_facing() {
-        let mut snake = Snake::new(2, 3);
+        let mut snake = SnakeNode::new(2, 3);
         snake.change_facing(Direction::Left);
         assert_eq!(snake.facing, Direction::Left);
     }
 
     #[test]
     fn get_facing_returns_facing() {
-        let mut snake = Snake::new(2, 3);
+        let mut snake = SnakeNode::new(2, 3);
         snake.facing = Direction::Left;
         assert_eq!(snake.get_facing(), Direction::Left);
     }
@@ -94,7 +94,7 @@ mod tests {
     #[case(Direction::Left, 0, 1)]
     #[case(Direction::Right, 2, 1)]
     fn move_forward_changes_position(#[case] direction: Direction, #[case] expected_x: i32, #[case] expected_y: i32) {
-        let mut snake = Snake::new(1, 1);
+        let mut snake = SnakeNode::new(1, 1);
         snake.facing = direction;
         snake.move_forward();
         assert_eq!(snake.x_position, expected_x);

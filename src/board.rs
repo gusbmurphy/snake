@@ -26,7 +26,7 @@ impl Turn {
 
 pub struct Board {
     score: i32,
-    snake: Snake,
+    snake: SnakeNode,
     apple: Apple,
     turns: [[Option<Turn>; SCREEN_HEIGHT as usize]; SCREEN_WIDTH as usize],
 }
@@ -35,7 +35,7 @@ impl Board {
     pub fn new() -> Self {
         Board {
             score: 0,
-            snake: Snake::new(10, 10),
+            snake: SnakeNode::new(10, 10),
             apple: Apple::new(20, 20),
             turns: [[None; SCREEN_HEIGHT as usize]; SCREEN_WIDTH as usize],
         }
@@ -103,7 +103,7 @@ mod tests {
     #[test]
     fn get_screen_representations_returns_correct_order() {
         let test_apple = Apple::new(2, 3);
-        let test_snake = Snake::new(7, 10);
+        let test_snake = SnakeNode::new(7, 10);
 
         let mut board = Board::new();
         board.apple = test_apple;
@@ -117,7 +117,7 @@ mod tests {
     #[test]
     fn score_is_incremented_if_player_is_on_apple_after_tick() {
         let test_apple = Apple::new(3, 4);
-        let test_snake = Snake::new(3, 3);
+        let test_snake = SnakeNode::new(3, 3);
 
         let mut board = Board::new();
         board.apple = test_apple;
@@ -131,7 +131,7 @@ mod tests {
 
     #[test]
     fn snake_is_moved_in_new_direction_after_tick() {
-        let snake = Snake::new(3, 3);
+        let snake = SnakeNode::new(3, 3);
 
         let mut board = Board::new();
         board.snake = snake;
@@ -144,7 +144,7 @@ mod tests {
 
     #[test]
     fn turn_is_added_when_player_turns() {
-        let snake = Snake::new(3, 3);
+        let snake = SnakeNode::new(3, 3);
 
         let mut board = Board::new();
         board.snake = snake;
@@ -156,7 +156,7 @@ mod tests {
 
     #[test]
     fn turn_is_not_added_if_direction_given_at_tick_is_same_as_snake_facing() {
-        let mut snake = Snake::new(3, 3);
+        let mut snake = SnakeNode::new(3, 3);
         snake.change_facing(Direction::Up);
 
         let mut board = Board::new();
