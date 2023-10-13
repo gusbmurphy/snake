@@ -72,6 +72,7 @@ impl ScreenRepresentable for Snake {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rstest::*;
 
     #[test]
     fn change_facing_sets_facing() {
@@ -85,5 +86,18 @@ mod tests {
         let mut snake = Snake::new(2, 3);
         snake.facing = Direction::Left;
         assert_eq!(snake.get_facing(), Direction::Left);
+    }
+
+    #[rstest]
+    #[case(Direction::Up, 1, 0)]
+    #[case(Direction::Down, 1, 2)]
+    #[case(Direction::Left, 0, 1)]
+    #[case(Direction::Right, 2, 1)]
+    fn move_forward_changes_position(#[case] direction: Direction, #[case] expected_x: i32, #[case] expected_y: i32) {
+        let mut snake = Snake::new(1, 1);
+        snake.facing = direction;
+        snake.move_forward();
+        assert_eq!(snake.x_position, expected_x);
+        assert_eq!(snake.y_position, expected_y);
     }
 }
