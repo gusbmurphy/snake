@@ -7,8 +7,6 @@ pub trait Position {
     fn get_y_position(&self) -> i32;
 }
 
-pub trait ComparePosition: Position {}
-
 #[derive(Clone, Copy)]
 pub struct Turn {
     x_position: i32,
