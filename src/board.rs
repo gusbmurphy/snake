@@ -217,14 +217,13 @@ mod tests {
     }
 
     #[test]
-    fn after_scoring_tick_node_is_added_where_apple_was() {
+    fn on_tick_after_scoring_tick_node_is_added_where_apple_was() {
         let test_apple = Apple::new(3, 4);
         let test_snake = SnakeNode::new(3, 3);
 
         let mut board = Board::new();
         board.apple = test_apple;
         board.snake_head = test_snake;
-        board.score = 0;
 
         board.tick(Direction::Down);
         board.tick(Direction::Down);
@@ -240,5 +239,19 @@ mod tests {
             4,
             "the added node is at the same Y position that the apple was"
         );
+    }
+
+    #[test]
+    fn right_after_scoring_tick_no_node_is_added() {
+        let test_apple = Apple::new(3, 4);
+        let test_snake = SnakeNode::new(3, 3);
+
+        let mut board = Board::new();
+        board.apple = test_apple;
+        board.snake_head = test_snake;
+
+        board.tick(Direction::Down);
+
+        assert_eq!(board.snake_tail.len(), 0);
     }
 }
