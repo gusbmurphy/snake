@@ -24,6 +24,16 @@ impl Turn {
     }
 }
 
+impl Position for Turn {
+    fn get_x_position(&self) -> i32 {
+        self.x_position
+    }
+
+    fn get_y_position(&self) -> i32 {
+        self.y_position
+    }
+}
+
 pub struct Board {
     score: i32,
     snake_head: SnakeNode,
@@ -84,6 +94,15 @@ impl Board {
         } else {
             for tail_index in 0..self.snake_tail.len() {
                 self.snake_tail[tail_index].move_forward();
+
+                for turn_index in 0..self.turns.len() {
+                    if Self::are_at_same_position(
+                        &self.snake_tail[tail_index],
+                        &self.turns[turn_index],
+                    ) {
+                        self.snake_tail[tail_index].change_facing(self.turns[turn_index].direction);
+                    }
+                }
             }
         }
 
@@ -272,5 +291,23 @@ mod tests {
 
         assert_eq!(board.snake_tail[0].get_x_position(), 2);
         assert_eq!(board.snake_tail[0].get_y_position(), 2);
+    }
+
+    #[test]
+    fn tail_node_takes_direction_of_turn() {
+        let snake_head = SnakeNode::new(8, 8); // Just pointing out, the snake doesn't need to be "attached"
+        let mut tail_node = SnakeNode::new(3, 2);
+        tail_node.change_facing(Direction::Down);
+
+        let turn = Turn::new(3, 3, Direction::Left);
+
+        let mut board = Board::new();
+        board.snake_head = snake_head;
+        board.snake_tail = Vec::from([tail_node.clone()]);
+        board.turns = Vec::from([turn.clone()]);
+
+        board.tick(Direction::Up);
+
+        assert_eq!(board.snake_tail[0].get_facing(), Direction::Left);
     }
 }
