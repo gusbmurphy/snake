@@ -81,6 +81,10 @@ impl Board {
             ));
 
             self.should_add_to_tail = false;
+        } else {
+            for tail_index in 0..self.snake_tail.len() {
+                self.snake_tail[tail_index].move_forward();
+            }
         }
 
         self.snake_head.move_forward();
@@ -253,5 +257,21 @@ mod tests {
         board.tick(Direction::Down);
 
         assert_eq!(board.snake_tail.len(), 0);
+    }
+
+    #[test]
+    fn snake_tail_node_moves_in_direction_of_facing() {
+        let snake_head = SnakeNode::new(8, 8);
+        let mut tail_node = SnakeNode::new(3, 2);
+        tail_node.change_facing(Direction::Left);
+
+        let mut board = Board::new();
+        board.snake_head = snake_head;
+        board.snake_tail = Vec::from([tail_node.clone()]);
+
+        board.tick(Direction::Down);
+
+        assert_eq!(board.snake_tail[0].get_x_position(), 2);
+        assert_eq!(board.snake_tail[0].get_y_position(), 2);
     }
 }
