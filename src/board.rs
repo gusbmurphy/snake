@@ -310,4 +310,10 @@ mod tests {
 
         assert_eq!(board.snake_tail[0].get_facing(), Direction::Left);
     }
+
+    #[ignore]
+    #[test]
+    fn added_tail_node_has_direction_of_head() {
+        // TODO: Create this test
+    }
 }
