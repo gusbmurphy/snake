@@ -30,7 +30,7 @@ pub struct Board {
     snake_tail: Vec<SnakeNode>,
     should_add_to_tail: bool,
     apple: Apple,
-    turns: [[Option<Turn>; SCREEN_HEIGHT as usize]; SCREEN_WIDTH as usize],
+    turns: Vec<Turn>,
 }
 
 impl Board {
@@ -41,7 +41,7 @@ impl Board {
             snake_tail: Vec::new(),
             should_add_to_tail: false,
             apple: Apple::new(20, 20),
-            turns: [[None; SCREEN_HEIGHT as usize]; SCREEN_WIDTH as usize],
+            turns: Vec::new(),
         }
     }
 
@@ -112,7 +112,7 @@ impl Board {
         let x_position = self.snake_head.get_x_position();
         let y_position = self.snake_head.get_y_position();
 
-        self.turns[x_position as usize][y_position as usize] = Some(Turn::new(
+        self.turns.push(Turn::new(
             x_position,
             y_position,
             self.snake_head.get_facing(),
@@ -197,7 +197,9 @@ mod tests {
 
         board.tick(Direction::Left);
 
-        assert_eq!(board.turns[3][3].unwrap().direction, Direction::Left);
+        assert_eq!(board.turns[0].direction, Direction::Left);
+        assert_eq!(board.turns[0].x_position, 3);
+        assert_eq!(board.turns[0].y_position, 3);
     }
 
     #[test]
@@ -214,10 +216,7 @@ mod tests {
     }
 
     fn board_has_any_turns(board: Board) -> bool {
-        board
-            .turns
-            .iter()
-            .any(|&column| column.iter().any(|&position| position.is_some()))
+        !board.turns.is_empty()
     }
 
     #[test]
