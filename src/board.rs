@@ -96,13 +96,22 @@ impl Board {
             for tail_index in 0..self.snake_tail.len() {
                 self.snake_tail[tail_index].move_forward();
 
+                let mut index_of_turn_to_remove: Option<usize> = None;
                 for turn_index in 0..self.turns.len() {
                     if Self::are_at_same_position(
                         &self.snake_tail[tail_index],
                         &self.turns[turn_index],
                     ) {
                         self.snake_tail[tail_index].change_facing(self.turns[turn_index].direction);
+
+                        if tail_index == 0 {
+                            index_of_turn_to_remove = Some(turn_index);
+                        }
                     }
+                }
+
+                if let Some(turn_index) = index_of_turn_to_remove {
+                    self.turns.remove(turn_index);
                 }
             }
         }
@@ -327,5 +336,25 @@ mod tests {
         let added_node = &board.snake_tail[0];
 
         assert_eq!(added_node.get_facing(), Direction::Right);
+    }
+
+    #[test]
+    fn turns_are_removed_after_last_node_has_hit_them() {
+        let snake_head = SnakeNode::new(4, 4, Direction::Down);
+        let first_tail_node = SnakeNode::new(4, 3, Direction::Down);
+        let second_tail_node = SnakeNode::new(4, 2, Direction::Down);
+        let turn = Turn::new(4, 4, Direction::Left);
+
+        let mut board = Board::new();
+        board.snake_head = snake_head;
+        board.snake_tail = Vec::from([first_tail_node, second_tail_node]);
+        board.turns = Vec::from([turn]);
+
+        board.tick(Direction::Down);
+        assert_eq!(board.turns.len(), 1); // After one tick, there should still be the turn
+
+        board.tick(Direction::Down);
+        assert_eq!(board.turns.len(), 0);
+        // After the second (and last) tail node has reached it, the turn should be removed
     }
 }
