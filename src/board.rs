@@ -47,7 +47,7 @@ impl Board {
     pub fn new() -> Self {
         Board {
             score: 0,
-            snake_head: SnakeNode::new(10, 10),
+            snake_head: SnakeNode::new(10, 10, Direction::Down),
             snake_tail: Vec::new(),
             should_add_to_tail: false,
             apple: Apple::new(20, 20),
@@ -88,6 +88,7 @@ impl Board {
             self.snake_tail.push(SnakeNode::new(
                 self.snake_head.get_x_position(),
                 self.snake_head.get_y_position(),
+                self.snake_head.get_facing(),
             ));
 
             self.should_add_to_tail = false;
@@ -153,8 +154,8 @@ mod tests {
     #[test]
     fn get_screen_representations_returns_correct_order() {
         let test_apple = Apple::new(2, 3);
-        let test_snake = SnakeNode::new(7, 10);
-        let test_tail = Vec::from([SnakeNode::new(8, 10)]);
+        let test_snake = SnakeNode::new(7, 10, Direction::Up);
+        let test_tail = Vec::from([SnakeNode::new(8, 10, Direction::Up)]);
 
         let mut board = Board::new();
         board.apple = test_apple;
@@ -182,7 +183,7 @@ mod tests {
     #[test]
     fn score_is_incremented_if_player_is_on_apple_after_tick() {
         let test_apple = Apple::new(3, 4);
-        let test_snake = SnakeNode::new(3, 3);
+        let test_snake = SnakeNode::new(3, 3, Direction::Up);
 
         let mut board = Board::new();
         board.apple = test_apple;
@@ -196,7 +197,7 @@ mod tests {
 
     #[test]
     fn snake_is_moved_in_new_direction_after_tick() {
-        let snake = SnakeNode::new(3, 3);
+        let snake = SnakeNode::new(3, 3, Direction::Up);
 
         let mut board = Board::new();
         board.snake_head = snake;
@@ -209,7 +210,7 @@ mod tests {
 
     #[test]
     fn turn_is_added_when_player_turns() {
-        let snake = SnakeNode::new(3, 3);
+        let snake = SnakeNode::new(3, 3, Direction::Up);
 
         let mut board = Board::new();
         board.snake_head = snake;
@@ -223,7 +224,7 @@ mod tests {
 
     #[test]
     fn turn_is_not_added_if_direction_given_at_tick_is_same_as_snake_facing() {
-        let mut snake = SnakeNode::new(3, 3);
+        let mut snake = SnakeNode::new(3, 3, Direction::Up);
         snake.change_facing(Direction::Up);
 
         let mut board = Board::new();
@@ -241,7 +242,7 @@ mod tests {
     #[test]
     fn on_tick_after_scoring_tick_node_is_added_where_apple_was() {
         let test_apple = Apple::new(3, 4);
-        let test_snake = SnakeNode::new(3, 3);
+        let test_snake = SnakeNode::new(3, 3, Direction::Up);
 
         let mut board = Board::new();
         board.apple = test_apple;
@@ -266,7 +267,7 @@ mod tests {
     #[test]
     fn right_after_scoring_tick_no_node_is_added() {
         let test_apple = Apple::new(3, 4);
-        let test_snake = SnakeNode::new(3, 3);
+        let test_snake = SnakeNode::new(3, 3, Direction::Up);
 
         let mut board = Board::new();
         board.apple = test_apple;
@@ -279,8 +280,8 @@ mod tests {
 
     #[test]
     fn snake_tail_node_moves_in_direction_of_facing() {
-        let snake_head = SnakeNode::new(8, 8);
-        let mut tail_node = SnakeNode::new(3, 2);
+        let snake_head = SnakeNode::new(8, 8, Direction::Up);
+        let mut tail_node = SnakeNode::new(3, 2, Direction::Up);
         tail_node.change_facing(Direction::Left);
 
         let mut board = Board::new();
@@ -295,8 +296,8 @@ mod tests {
 
     #[test]
     fn tail_node_takes_direction_of_turn() {
-        let snake_head = SnakeNode::new(8, 8); // Just pointing out, the snake doesn't need to be "attached"
-        let mut tail_node = SnakeNode::new(3, 2);
+        let snake_head = SnakeNode::new(8, 8, Direction::Up); // Just pointing out, the snake doesn't need to be "attached"
+        let mut tail_node = SnakeNode::new(3, 2, Direction::Up);
         tail_node.change_facing(Direction::Down);
 
         let turn = Turn::new(3, 3, Direction::Left);
@@ -311,9 +312,20 @@ mod tests {
         assert_eq!(board.snake_tail[0].get_facing(), Direction::Left);
     }
 
-    #[ignore]
     #[test]
     fn added_tail_node_has_direction_of_head() {
-        // TODO: Create this test
+        let test_apple = Apple::new(4, 3);
+        let test_snake = SnakeNode::new(3, 3, Direction::Up);
+
+        let mut board = Board::new();
+        board.apple = test_apple;
+        board.snake_head = test_snake;
+
+        board.tick(Direction::Right);
+        board.tick(Direction::Right);
+
+        let added_node = &board.snake_tail[0];
+
+        assert_eq!(added_node.get_facing(), Direction::Right);
     }
 }

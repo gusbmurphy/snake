@@ -28,11 +28,11 @@ pub struct SnakeNode {
 }
 
 impl SnakeNode {
-    pub fn new(x_position: i32, y_position: i32) -> Self {
+    pub fn new(x_position: i32, y_position: i32, facing: Direction) -> Self {
         SnakeNode {
             x_position,
             y_position,
-            facing: Direction::Down,
+            facing,
         }
     }
 
@@ -77,14 +77,14 @@ mod tests {
 
     #[test]
     fn change_facing_sets_facing() {
-        let mut snake = SnakeNode::new(2, 3);
+        let mut snake = SnakeNode::new(2, 3, Direction::Down);
         snake.change_facing(Direction::Left);
         assert_eq!(snake.facing, Direction::Left);
     }
 
     #[test]
     fn get_facing_returns_facing() {
-        let mut snake = SnakeNode::new(2, 3);
+        let mut snake = SnakeNode::new(2, 3, Direction::Down);
         snake.facing = Direction::Left;
         assert_eq!(snake.get_facing(), Direction::Left);
     }
@@ -99,7 +99,7 @@ mod tests {
         #[case] expected_x: i32,
         #[case] expected_y: i32,
     ) {
-        let mut snake = SnakeNode::new(1, 1);
+        let mut snake = SnakeNode::new(1, 1, Direction::Down);
         snake.facing = direction;
         snake.move_forward();
         assert_eq!(snake.x_position, expected_x);
