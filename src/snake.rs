@@ -40,7 +40,7 @@ impl SnakeNode {
         self.facing = new_direction;
     }
 
-    pub fn get_facing(&mut self) -> Direction {
+    pub fn get_facing(&self) -> Direction {
         return self.facing;
     }
 
