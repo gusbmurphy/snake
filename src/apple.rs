@@ -12,10 +12,6 @@ impl Apple {
             y_position,
         }
     }
-
-    pub fn render(&mut self, ctx: &mut BTerm) {
-        ctx.set(self.x_position, self.y_position, RED, BLACK, to_cp437('▲'))
-    }
 }
 
 impl Position for Apple {
