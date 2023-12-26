@@ -12,6 +12,7 @@ pub struct Turn {
     x_position: i32,
     y_position: i32,
     pub direction: Direction,
+    seen_nodes_count: i32,
 }
 
 impl Turn {
@@ -20,7 +21,16 @@ impl Turn {
             x_position,
             y_position,
             direction,
+            seen_nodes_count: 0,
         }
+    }
+
+    pub fn see_a_node(&mut self) {
+        self.seen_nodes_count += 1;
+    }
+
+    pub fn get_seen_nodes_count(self) -> i32 {
+        return self.seen_nodes_count;
     }
 }
 
@@ -97,14 +107,18 @@ impl Board {
                 self.snake_tail[tail_index].move_forward();
 
                 let mut index_of_turn_to_remove: Option<usize> = None;
+
                 for turn_index in 0..self.turns.len() {
                     if Self::are_at_same_position(
                         &self.snake_tail[tail_index],
                         &self.turns[turn_index],
                     ) {
                         self.snake_tail[tail_index].change_facing(self.turns[turn_index].direction);
+                        self.turns[turn_index].see_a_node();
 
-                        if tail_index == 0 {
+                        if self.turns[turn_index].get_seen_nodes_count()
+                            == self.snake_tail.len() as i32
+                        {
                             index_of_turn_to_remove = Some(turn_index);
                         }
                     }
@@ -343,17 +357,16 @@ mod tests {
         let snake_head = SnakeNode::new(4, 4, Direction::Down);
         let first_tail_node = SnakeNode::new(4, 3, Direction::Down);
         let second_tail_node = SnakeNode::new(4, 2, Direction::Down);
-        let turn = Turn::new(4, 4, Direction::Left);
 
         let mut board = Board::new();
         board.snake_head = snake_head;
-        board.snake_tail = Vec::from([first_tail_node, second_tail_node]);
-        board.turns = Vec::from([turn]);
+        board.snake_tail = Vec::from([first_tail_node.clone(), second_tail_node.clone()]);
 
-        board.tick(Direction::Down);
-        assert_eq!(board.turns.len(), 1); // After one tick, there should still be the turn
+        board.tick(Direction::Right);
+        assert_eq!(board.turns.len(), 1); // There should be one turn...
 
-        board.tick(Direction::Down);
+        board.tick(Direction::Right);
+        board.tick(Direction::Right);
         assert_eq!(board.turns.len(), 0);
         // After the second (and last) tail node has reached it, the turn should be removed
     }
