@@ -89,7 +89,7 @@ impl Board {
     }
 
     pub fn tick(&mut self, new_direction: Direction) {
-        if new_direction != self.snake_head.get_facing() {
+        if self.should_turn_in_direction(new_direction) {
             self.snake_head.change_facing(new_direction);
             self.add_turn_at_player_position_with_player_facing();
         }
@@ -137,6 +137,22 @@ impl Board {
             self.generate_random_apple();
             self.should_add_to_tail = true;
         }
+    }
+
+    fn should_turn_in_direction(&mut self, new_direction: Direction) -> bool {
+        let snake_direction = self.snake_head.get_facing();
+
+        let mut should_turn = new_direction != snake_direction;
+
+        if !should_turn {
+            return false;
+        }
+
+        if self.snake_tail.len() > 0 {
+            should_turn = should_turn && new_direction != Direction::get_opposite(snake_direction);
+        }
+
+        return should_turn;
     }
 
     fn are_at_same_position(a: &impl Position, b: &impl Position) -> bool {
@@ -369,5 +385,22 @@ mod tests {
         board.tick(Direction::Right);
         assert_eq!(board.turns.len(), 0);
         // After the second (and last) tail node has reached it, the turn should be removed
+    }
+
+    #[test]
+    fn with_tail_180_turn_is_not_allowed() {
+        let snake_head = SnakeNode::new(4, 4, Direction::Down);
+        let first_tail_node = SnakeNode::new(4, 3, Direction::Down);
+        let second_tail_node = SnakeNode::new(4, 2, Direction::Down);
+
+        let mut board = Board::new();
+        board.snake_head = snake_head;
+        board.snake_tail = Vec::from([first_tail_node.clone(), second_tail_node.clone()]);
+
+        board.tick(Direction::Up);
+
+        // We should not see any turns because we can't turn the opposite direction that
+        // we were heading...
+        assert_eq!(board.turns.len(), 0);
     }
 }
